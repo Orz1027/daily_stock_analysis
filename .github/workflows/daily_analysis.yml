@@ -75,6 +75,8 @@ jobs:
           LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
           LITELLM_MODEL: ${{ vars.LITELLM_MODEL || secrets.LITELLM_MODEL }}
 
+          DATA_SOURCE_PRIORITY: ${{ vars.DATA_SOURCE_PRIORITY || 'Yfinance,Efinance,Tushare' }}
+
           # Gemini AI（主选）
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || secrets.GEMINI_MODEL || 'gemini-3-flash-preview' }}
