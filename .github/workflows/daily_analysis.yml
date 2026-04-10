@@ -59,7 +59,10 @@ jobs:
       - name: 生成 LiteLLM 配置文件
         run: |
           mkdir -p config
-          echo "${{ vars.LITELLM_CONFIG_YAML }}" > config/litellm_config.yaml
+          cat <<EOF > config/litellm_config.yaml
+          ${{ vars.LITELLM_CONFIG_YAML }}
+          EOF
+
 
       - name: 执行股票分析
 
