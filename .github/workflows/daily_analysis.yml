@@ -60,7 +60,7 @@ jobs:
         run: |
           mkdir -p config
           cat <<EOF > config/litellm_config.yaml
-          ${{ vars.LITELLM_CONFIG_YAML }}
+          ${{ vars.LITELLM_CONFIG_YAML || secrets.LITELLM_CONFIG_YAML }}
           EOF
 
 
