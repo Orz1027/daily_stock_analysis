@@ -69,7 +69,9 @@ jobs:
           # ==========================================
           # AI 配置
           # ==========================================
-          LLM_MODEL: "gpt-4o"                        # 强制指定主选模型为 gpt-4o
+          LLM_MODEL: "gpt-4o"
+          LITELLM_MODEL: "gpt-4o"
+          # 强制指定主选模型为 gpt-4o
           DATA_SOURCE_ORDER: "Yfinance,Efinance,Tushare" # 强制数据源优先级
           DATA_SOURCE_PRIORITY: "Yfinance,Efinance,Tushare"
           
