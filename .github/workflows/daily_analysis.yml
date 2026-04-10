@@ -57,6 +57,15 @@ jobs:
           mkdir -p data logs reports
       
       - name: 执行股票分析
+            - name: 生成 LiteLLM 配置文件
+        run: |
+          mkdir -p config
+          echo "${{ vars.LITELLM_CONFIG_YAML }}" > config/litellm_config.yaml
+
+      - name: 执行股票分析
+        env:
+          # 你截图里的那些 env 配置保持不变...
+
         env:
           # ==========================================
           # AI 配置
