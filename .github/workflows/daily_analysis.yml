@@ -71,6 +71,7 @@ jobs:
           # ==========================================
           LLM_MODEL: "gpt-4o"                        # 强制指定主选模型为 gpt-4o
           DATA_SOURCE_ORDER: "Yfinance,Efinance,Tushare" # 强制数据源优先级
+          DATA_SOURCE_PRIORITY: "Yfinance,Efinance,Tushare"
           
           # --- LiteLLM / GPT-4o 配置 ---
 
@@ -81,8 +82,6 @@ jobs:
           AIHUBMIX_KEY: ${{ secrets.AIHUBMIX_KEY }}
           LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
           LITELLM_MODEL: ${{ vars.LITELLM_MODEL || secrets.LITELLM_MODEL }}
-
-          DATA_SOURCE_PRIORITY: ${{ vars.DATA_SOURCE_PRIORITY || 'Yfinance,Efinance,Tushare' }}
 
           # Gemini AI（主选）
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
