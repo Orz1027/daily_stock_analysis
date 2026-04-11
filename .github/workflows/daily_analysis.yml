@@ -73,7 +73,7 @@ jobs:
           DATA_SOURCE_PRIORITY: "Yfinance,Efinance,Tushare"
 
           #LITELLM_CONFIG
-          LITELLM_CONFIG: config/litellm_config.yaml
+          LITELLM_CONFIG: ${{ vars.LITELLM_CONFIG || secrets.LITELLM_CONFIG }}
           LITELLM_CONFIG_YAML: ${{ vars.LITELLM_CONFIG_YAML || secrets.LITELLM_CONFIG_YAML }}
           LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
           LITELLM_MODEL: ${{ vars.LITELLM_MODEL || secrets.LITELLM_MODEL }}
