@@ -77,6 +77,7 @@ jobs:
           #LITELLM_CONFIG
           LITELLM_CONFIG: "config/litellm_config.yaml"
           LITELLM_CONFIG_YAML: ${{ vars.LITELLM_CONFIG_YAML }}
+          LITELLM_MODEL: "smart-router"
           LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
           
           # Gemini AI（主选）
