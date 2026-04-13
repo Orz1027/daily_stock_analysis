@@ -71,35 +71,28 @@ jobs:
           # ==========================================
           DATA_SOURCE_ORDER: "Yfinance,Efinance" # 强制数据源优先级
           DATA_SOURCE_PRIORITY: "Yfinance,Efinance"
-          
-          # Gemini AI（主选）
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || secrets.GEMINI_MODEL || 'gemini-3-flash-preview' }}
-          GEMINI_MODEL_FALLBACK: ${{ vars.GEMINI_MODEL_FALLBACK || secrets.GEMINI_MODEL_FALLBACK || 'gemini-2.5-flash' }}
-          GEMINI_REQUEST_DELAY: '15'
 
-          LITELLM_FALLBACK_MODELS: "openai/gpt-4o-free"
+          # --- 多渠道 AI 配置 (根据教程 78d8fb4a) ---
+          LLM_CHANNELS: "gemini,aihubmix"
+          
+          # 渠道一：Gemini (主选)
+          LLM_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_GEMINI_MODELS: "gemini/gemini-3-flash-preview"
+          # 增加延时防止 503 报错
+          GEMINI_REQUEST_DELAY: "15"
 
-          # AIHubMix（优先于 OPENAI_API_KEY，自动适配 base_url，推荐国内用户）
-          AIHUBMIX_KEY: ${{ secrets.AIHUBMIX_KEY }}
-          
-          # OpenAI 兼容 API（备选）
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: ${{ vars.OPENAI_BASE_URL || secrets.OPENAI_BASE_URL }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || secrets.OPENAI_MODEL }}
-          
-          # DeepSeek
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          
-          # Anthropic / Claude
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL || secrets.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022' }}
+          # 渠道二：AIHubMix (备选)
+          LLM_AIHUBMIX_API_KEY: ${{ secrets.AIHUBMIX_KEY }}
+          LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
+          LLM_AIHUBMIX_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
 
+          # 核心路由逻辑
+          LITELLM_MODEL: "gemini/gemini-3-flash-preview"
+          LITELLM_FALLBACK_MODELS: "openai/gpt-4o-mini,anthropic/claude-3-5-sonnet"
+          
           # ==========================================
           # 数据源
           # ==========================================
-          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-          
           # ==========================================
           # 搜索服务
           # ==========================================
