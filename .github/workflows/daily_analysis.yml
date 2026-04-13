@@ -69,16 +69,8 @@ jobs:
           # ==========================================
           # AI 配置
           # ==========================================
-          ENABLE_TUSHARE: "false"
-
-          DATA_SOURCE_ORDER: "Yfinance,Efinance,Tushare" # 强制数据源优先级
-          DATA_SOURCE_PRIORITY: "Yfinance,Efinance,Tushare"
-
-          #LITELLM_CONFIG
-          LITELLM_CONFIG: "config/litellm_config.yaml"
-          LITELLM_CONFIG_YAML: ${{ vars.LITELLM_CONFIG_YAML }}
-          LITELLM_MODEL: "smart-router"
-          LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
+          DATA_SOURCE_ORDER: "Yfinance,Efinance" # 强制数据源优先级
+          DATA_SOURCE_PRIORITY: "Yfinance,Efinance"
           
           # Gemini AI（主选）
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
