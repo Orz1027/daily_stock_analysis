@@ -63,6 +63,19 @@ jobs:
           mkdir -p config
           echo "$CONFIG_CONTENT" > config/litellm_config.yaml
 
+      - name: 运行环境诊断
+        env:
+          LLM_CHANNELS: "gemini,aihubmix"
+          LLM_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_AIHUBMIX_API_KEY: ${{ secrets.AIHUBMIX_KEY }}
+          LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
+          LITELLM_MODEL: "gemini/gemini-3-flash-preview"
+          LITELLM_FALLBACK_MODELS: "openai/gpt-4o-mini,anthropic/claude-3-5-sonnet"
+        run: |
+          echo "🔍 开始排错诊断..."
+          python test_env.py --config
+          python test_env.py --llm
+
       - name: 执行股票分析
 
         env:
