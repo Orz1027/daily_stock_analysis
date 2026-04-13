@@ -90,14 +90,15 @@ jobs:
           LLM_CHANNELS: "gemini,aihubmix"
           
           # 渠道一：Gemini (主选)
+          LLM_GEMINI_BASE_URL: "https://api.aihubmix.com/v1"
           LLM_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LLM_GEMINI_MODELS: "gemini/gemini-3-flash-preview"
           # 增加延时防止 503 报错
           GEMINI_REQUEST_DELAY: "15"
 
           # 渠道二：AIHubMix (备选)
-          LLM_AIHUBMIX_API_KEY: ${{ secrets.AIHUBMIX_KEY }}
           LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
+          LLM_AIHUBMIX_API_KEY: ${{ secrets.AIHUBMIX_KEY }}
           LLM_AIHUBMIX_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
 
           # 核心路由逻辑
