@@ -56,56 +56,31 @@ jobs:
         run: |
           mkdir -p data logs reports
       
-    - name: 生成 LiteLLM 配置文件
-      run: |
-        cat <<EOF > litellm_config.yaml
-        model_list:
-          # 1. 首选：Gemini (主渠道)
-          - model_name: "gemini-1.5-flash"
-            litellm_params:
-              model: "gemini/gemini-1.5-flash"
-              api_key: "${{ secrets.GEMINI_API_KEY }}"
-              api_base: "https://generativelanguage.googleapis.com"
-
-          # 2. 备选：AIHubMix (GPT-4o-mini)
-          - model_name: "gpt-4o-mini"
-            litellm_params:
-              model: "openai/gpt-4o-mini"
-              api_key: "${{ secrets.AIHUBMIX_KEY }}"
-              api_base: "https://api.aihubmix.com/v1"
-
-          # 3. 备选：AIHubMix (Claude 3.5 Sonnet)
-          - model_name: "claude-3-5-sonnet"
-            litellm_params:
-              model: "openai/claude-3-5-sonnet" # 注意：中转站通常使用 openai 格式调用
-              api_key: "${{ secrets.AIHUBMIX_KEY }}"
-              api_base: "https://api.aihubmix.com/v1"
-        EOF
-
-    - name: 执行股票分析
-      env:
-        # 模仿你截图中的逻辑 (7125fd7c)
-        LITELLM_MODEL: "gemini-1.5-flash" 
-        LITELLM_FALLBACK_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
-        
-        # 保持其他必要的环境变量
-        GEMINI_REQUEST_DELAY: "15"
-        STOCK_DATA_SOURCE: "Yfinance"
-
-
-      - name: 运行环境诊断
-        env:
-          LLM_CHANNELS: "gemini,aihubmix"
-        # 修正后：左边加 LLM_ 对接程序，右边保持原样对接你的 Secret
-          LLM_GEMINI_API_KEY: "AIzaSyAiqenKChJdJaIkFeTwbsdIsb8d3kuflEs"
-          LLM_AIHUBMIX_API_KEY: "sk-wqHYFBEcJ3av77bwB574A7Df1bBa417bBa337a1dC5F36fD9"
-          LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
-          LITELLM_MODEL: "gemini/gemini-3-flash-preview"
-          LITELLM_FALLBACK_MODELS: "openai/gpt-4o-mini,anthropic/claude-3-5-sonnet"
+      - name: 生成 LiteLLM 配置文件
         run: |
-          echo "🔍 开始排错诊断..."
-          python test_env.py --config
-          python test_env.py --llm
+          cat <<EOF > litellm_config.yaml
+          model_list:
+            # 1. 首选：Gemini (主渠道)
+            - model_name: "gemini-1.5-flash"
+              litellm_params:
+                model: "gemini/gemini-1.5-flash"
+                api_key: "${{ secrets.GEMINI_API_KEY }}"
+                api_base: "https://generativelanguage.googleapis.com"
+
+            # 2. 备选：AIHubMix (GPT-4o-mini)
+            - model_name: "gpt-4o-mini"
+              litellm_params:
+                model: "openai/gpt-4o-mini"
+                api_key: "${{ secrets.AIHUBMIX_KEY }}"
+                api_base: "https://api.aihubmix.com/v1"
+
+            # 3. 备选：AIHubMix (Claude 3.5 Sonnet)
+            - model_name: "claude-3-5-sonnet"
+              litellm_params:
+                model: "openai/claude-3-5-sonnet" # 注意：中转站通常使用 openai 格式调用
+                api_key: "${{ secrets.AIHUBMIX_KEY }}"
+                api_base: "https://api.aihubmix.com/v1"
+          EOF
 
       - name: 执行股票分析
 
@@ -116,24 +91,24 @@ jobs:
           DATA_SOURCE_ORDER: "Yfinance,Efinance" # 强制数据源优先级
           DATA_SOURCE_PRIORITY: "Yfinance,Efinance"
 
-          # --- 多渠道 AI 配置 (根据教程 78d8fb4a) ---
-          LLM_CHANNELS: "gemini,aihubmix"
+          LITELLM_MODEL: "gemini-1.5-flash" 
+          LITELLM_FALLBACK_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
           
           # 渠道一：Gemini (主选)
-          LLM_GEMINI_BASE_URL: "https://generativelanguage.googleapis.com"
-          LLM_GEMINI_API_KEY: "AIzaSyAiqenKChJdJaIkFeTwbsdIsb8d3kuflEs"
-          LLM_GEMINI_MODELS: "gemini/gemini-3-flash-preview"
+          #LLM_GEMINI_BASE_URL: "https://generativelanguage.googleapis.com"
+          #LLM_GEMINI_API_KEY: "AIzaSyAiqenKChJdJaIkFeTwbsdIsb8d3kuflEs"
+          #LLM_GEMINI_MODELS: "gemini/gemini-3-flash-preview"
           # 增加延时防止 503 报错
           GEMINI_REQUEST_DELAY: "15"
 
           # 渠道二：AIHubMix (备选)
-          LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
-          LLM_AIHUBMIX_API_KEY: "sk-wqHYFBEcJ3av77bwB574A7Df1bBa417bBa337a1dC5F36fD9"
-          LLM_AIHUBMIX_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
+          #LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
+          #LLM_AIHUBMIX_API_KEY: "sk-wqHYFBEcJ3av77bwB574A7Df1bBa417bBa337a1dC5F36fD9"
+          #LLM_AIHUBMIX_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
 
           # 核心路由逻辑
-          LITELLM_MODEL: "gemini/gemini-3-flash-preview"
-          LITELLM_FALLBACK_MODELS: "openai/gpt-4o-mini,anthropic/claude-3-5-sonnet"
+          #LITELLM_MODEL: "gemini/gemini-3-flash-preview"
+          #LITELLM_FALLBACK_MODELS: "openai/gpt-4o-mini,anthropic/claude-3-5-sonnet"
           
           # ==========================================
           # 数据源
@@ -154,16 +129,16 @@ jobs:
           # ==========================================
           
           # 方式一：企业微信 Webhook
-          WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
-          WECHAT_MSG_TYPE: ${{ vars.WECHAT_MSG_TYPE || secrets.WECHAT_MSG_TYPE || 'markdown' }}
+          #WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
+          #WECHAT_MSG_TYPE: ${{ vars.WECHAT_MSG_TYPE || secrets.WECHAT_MSG_TYPE || 'markdown' }}
           
           # 方式二：飞书 Webhook
-          FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          #FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           
           # 方式三：Telegram
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE_THREAD_ID: ${{ secrets.TELEGRAM_MESSAGE_THREAD_ID }}
+          #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          #TELEGRAM_MESSAGE_THREAD_ID: ${{ secrets.TELEGRAM_MESSAGE_THREAD_ID }}
           
           # 方式四：邮件
           EMAIL_SENDER: ${{ vars.EMAIL_SENDER || secrets.EMAIL_SENDER }}
@@ -172,8 +147,8 @@ jobs:
           EMAIL_SENDER_NAME: ${{ vars.EMAIL_SENDER_NAME || secrets.EMAIL_SENDER_NAME || 'daily_stock_analysis股票分析助手' }}
           
           # 方式五：Pushover
-          PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
-          PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
+          #PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
+          #PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
           
           # 方式六：PushPlus ⬅️ 新增！
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
@@ -183,21 +158,21 @@ jobs:
           CUSTOM_WEBHOOK_BEARER_TOKEN: ${{ secrets.CUSTOM_WEBHOOK_BEARER_TOKEN }}
           
           # 方式八：Discord
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_MAIN_CHANNEL_ID: ${{ secrets.DISCORD_MAIN_CHANNEL_ID }}
+     #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+     #     DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      #    DISCORD_MAIN_CHANNEL_ID: ${{ secrets.DISCORD_MAIN_CHANNEL_ID }}
           
           # 方式九：飞书云文档
-          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
-          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
-          FEISHU_FOLDER_TOKEN: ${{ secrets.FEISHU_FOLDER_TOKEN }}
+       #   FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+     #     FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+   #       FEISHU_FOLDER_TOKEN: ${{ secrets.FEISHU_FOLDER_TOKEN }}
 
           # 方式十：AstrBot
-          ASTRBOT_URL: ${{ secrets.ASTRBOT_URL }}
-          ASTRBOT_TOKEN: ${{ secrets.ASTRBOT_TOKEN }}
+    #      ASTRBOT_URL: ${{ secrets.ASTRBOT_URL }}
+    #      ASTRBOT_TOKEN: ${{ secrets.ASTRBOT_TOKEN }}
 
           # 方式十一：Server酱3
-          SERVERCHAN3_SENDKEY: ${{ secrets.SERVERCHAN3_SENDKEY }}
+    #      SERVERCHAN3_SENDKEY: ${{ secrets.SERVERCHAN3_SENDKEY }}
 
           # 方式十二：Slack
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
