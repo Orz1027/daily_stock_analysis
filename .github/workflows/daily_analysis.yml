@@ -83,8 +83,12 @@ jobs:
           EOF
 
       - name: 执行股票分析
+
         env:
-          # --- 核心逻辑 ---
+          # ==========================================
+          # AI 配置
+          # ==========================================
+                    # --- 核心逻辑 ---
           LLM_CHANNELS: "gemini,aihubmix"
 
           # --- Gemini 配置 ---
@@ -105,26 +109,13 @@ jobs:
           GEMINI_REQUEST_DELAY: "15"
           STOCK_DATA_SOURCE: "Yfinance"
           DATA_SOURCE_ORDER: "Yfinance,Efinance"
-
-
-      - name: 执行股票分析
-
-        env:
-          # ==========================================
-          # AI 配置
-          # ==========================================
-          DATA_SOURCE_ORDER: "Yfinance,Efinance" # 强制数据源优先级
-          DATA_SOURCE_PRIORITY: "Yfinance,Efinance"
-
-          LITELLM_MODEL: "gemini-1.5-flash" 
-          LITELLM_FALLBACK_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
           
           # 渠道一：Gemini (主选)
           #LLM_GEMINI_BASE_URL: "https://generativelanguage.googleapis.com"
           #LLM_GEMINI_API_KEY: "AIzaSyAiqenKChJdJaIkFeTwbsdIsb8d3kuflEs"
           #LLM_GEMINI_MODELS: "gemini/gemini-3-flash-preview"
           # 增加延时防止 503 报错
-          GEMINI_REQUEST_DELAY: "15"
+          # GEMINI_REQUEST_DELAY: "15"
 
           # 渠道二：AIHubMix (备选)
           #LLM_AIHUBMIX_BASE_URL: "https://api.aihubmix.com/v1"
