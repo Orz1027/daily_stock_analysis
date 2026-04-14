@@ -56,12 +56,42 @@ jobs:
         run: |
           mkdir -p data logs reports
       
-      - name: 生成 LiteLLM 配置文件
-        env:
-          CONFIG_CONTENT: ${{ vars.LITELLM_CONFIG_YAML || secrets.LITELLM_CONFIG_YAML }}
-        run: |
-          mkdir -p config
-          echo "$CONFIG_CONTENT" > config/litellm_config.yaml
+    - name: 生成 LiteLLM 配置文件
+      run: |
+        cat <<EOF > litellm_config.yaml
+        model_list:
+          # 1. 首选：Gemini (主渠道)
+          - model_name: "gemini-1.5-flash"
+            litellm_params:
+              model: "gemini/gemini-1.5-flash"
+              api_key: "${{ secrets.GEMINI_API_KEY }}"
+              api_base: "https://generativelanguage.googleapis.com"
+
+          # 2. 备选：AIHubMix (GPT-4o-mini)
+          - model_name: "gpt-4o-mini"
+            litellm_params:
+              model: "openai/gpt-4o-mini"
+              api_key: "${{ secrets.AIHUBMIX_KEY }}"
+              api_base: "https://api.aihubmix.com/v1"
+
+          # 3. 备选：AIHubMix (Claude 3.5 Sonnet)
+          - model_name: "claude-3-5-sonnet"
+            litellm_params:
+              model: "openai/claude-3-5-sonnet" # 注意：中转站通常使用 openai 格式调用
+              api_key: "${{ secrets.AIHUBMIX_KEY }}"
+              api_base: "https://api.aihubmix.com/v1"
+        EOF
+
+    - name: 执行股票分析
+      env:
+        # 模仿你截图中的逻辑 (7125fd7c)
+        LITELLM_MODEL: "gemini-1.5-flash" 
+        LITELLM_FALLBACK_MODELS: "gpt-4o-mini,claude-3-5-sonnet"
+        
+        # 保持其他必要的环境变量
+        GEMINI_REQUEST_DELAY: "15"
+        STOCK_DATA_SOURCE: "Yfinance"
+
 
       - name: 运行环境诊断
         env:
